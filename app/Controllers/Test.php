@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use Attribute;
 use DOMDocument;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
 class Test extends BaseController
@@ -61,6 +63,7 @@ class Test extends BaseController
                 echo 'failed';
         endif;
         $directory = self::mapDirectory($this->mainpath);
+        $this->Session->setFlashdata('balance',self::setCalcultationRules($directory));
         $params =[
                 'data' => self::setCalcultationRules($directory) ,
                 'sumt' => 0.0,
@@ -148,6 +151,31 @@ class Test extends BaseController
         endforeach;
         ksort($items); 
         return $items;
+    }
+
+    public function export()
+    {
+        $balance = $this->Session->getFlashdata('balance');
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->getProperties()->setCreator("Atik junglaCODE")->setTitle('Excel de auditoria');
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Periodo');
+        $sheet->setCellValue('B1', 'Version');
+        $sheet->setCellValue('C1', 'UUID');
+        $sheet->setCellValue('D1', 'Subtotal');
+        $sheet->setCellValue('E1', 'IVA');
+        $sheet->setCellValue('F1', 'Total');
+        $sheet->setCellValue('G1', 'Metodo de pago');
+        $sheet->setCellValue('H1', 'Forma de pago');
+        $sheet->setCellValue('I1', 'Fecha');
+        $writer = new Xlsx($spreadsheet);
+        foreach($balance as $key => $value):
+            var_dump($value);
+            echo "<br>";
+        endforeach;
+        /*header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="auditoria.xlsx"');
+        $writer->save('php://output');*/
     }
 
 }
