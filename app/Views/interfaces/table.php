@@ -1,7 +1,6 @@
 <?= $this->extend('templates/default') ?>
 <?= $this->section('organism') ?>
 <section class="section row">
-<div class="col s11">
     <table class="bordered striped highlight">
     <thead>
         <tr>
@@ -43,9 +42,10 @@
         <?php endforeach?>
     </tbody>
     </table>
-</div>
-<div class="col s1">
-    <a class="waves-effect waves-light  btn" href="<?=base_url('test/export')?>"> Descargar </a>
+<div class="fixed-action-btn">
+    <a class=" btn-floating  waves-effect waves-light btn-large red btn pulse" href="<?=base_url('test/export')?>"> 
+        <i class="material-icons">file_download 
+    </a>
 </div>
 </section>
 <?= $this->endSection() ?> 

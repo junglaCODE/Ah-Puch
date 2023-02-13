@@ -168,14 +168,17 @@ class Test extends BaseController
         $sheet->setCellValue('G1', 'Metodo de pago');
         $sheet->setCellValue('H1', 'Forma de pago');
         $sheet->setCellValue('I1', 'Fecha');
+       /* foreach($balance as $key => $value):
+            $i = 0;
+            foreach($value as $_key => $_value):
+                $sheet->setCellValueByColumnAndRow(2, $i, 'asdad');
+            endforeach;
+            $i++;
+        endforeach;*/
         $writer = new Xlsx($spreadsheet);
-        foreach($balance as $key => $value):
-            var_dump($value);
-            echo "<br>";
-        endforeach;
-        /*header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename="auditoria.xlsx"');
-        $writer->save('php://output');*/
+        $writer->save('php://output');
     }
 
 }

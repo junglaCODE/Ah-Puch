@@ -128,4 +128,5 @@ nb-configuration.xml
 
 public/_filesystem/*
 public/_thirdparty/*
+public/_assets/_thirdparty/*
 .env
