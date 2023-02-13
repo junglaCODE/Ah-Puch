@@ -8,7 +8,7 @@
         <th>Version</th>
         <th>UUID</th>
         <th>Subtotal</th>
-        <th>IVA*</th>
+        <th>IVA</th>
         <th>Total</th>
         <th>Metodo de pago</th>
         <th>Forma de pago</th>

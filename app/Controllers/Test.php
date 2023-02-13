@@ -16,7 +16,8 @@ class Test extends BaseController
     {
         $this->Hunabku->title = "Analizador";
         $params =  [
-            'action' => base_url('test/uploadFile')
+            'action' => base_url('test/uploadFile') ,
+            'imgtip'=> base_url(ASSETS_IMAGES).'/primera-fase.png'
         ];
         return $this->Hunabku->Render('form',$params);
     }
@@ -47,7 +48,12 @@ class Test extends BaseController
         $_cachepath = WRITEPATH.'uploads/';
         $zip = new \ZipArchive;
         if ($zip->open($_cachepath.$compressed) === TRUE):
-            $main = explode('/',$zip->getNameIndex(0))[0];
+            for($i = 0; $i < $zip->numFiles; $i++):
+                if(strstr($zip->getNameIndex($i), '__MACOSX') == FALSE):
+                    $main = explode('/',$zip->getNameIndex($i))[0];
+                    break;
+                endif;
+            endfor;
             $zip->extractTo($_cachepath.self::TMPFOLDER);
             $zip->close();
             $this->mainpath = $_cachepath.self::TMPFOLDER.$main; 
@@ -55,14 +61,13 @@ class Test extends BaseController
                 echo 'failed';
         endif;
         $directory = self::mapDirectory($this->mainpath);
-        var_dump($directory);
-        /*$params =[
+        $params =[
                 'data' => self::setCalcultationRules($directory) ,
                 'sumt' => 0.0,
                 'sumi' => 0.0,
                 'sums' => 0.0,
             ];
-        return $this->Hunabku->Render('table',$params);*/
+        return $this->Hunabku->Render('table',$params);
     }
 
     public function setCalcultationRules($directory)
@@ -100,6 +105,7 @@ class Test extends BaseController
     public function getDataFinancial($_resource)
     {
         $data = null;
+        libxml_use_internal_errors(true);
         try {
             $objxml = \simplexml_load_file($_resource);
             $objxml->registerXPathNamespace("tfd", "http://www.sat.gob.mx/TimbreFiscalDigital");
@@ -124,10 +130,10 @@ class Test extends BaseController
 
     public function mapDirectory(string $path){
         helper('filesystem');
-        var_dump(directory_map($path));
-        //unset($map['__MACOSX/']);
-        //unset($map['.git/']);
-        //return $map;
+        $map = directory_map($path);
+        unset($map['__MACOSX/']);
+        unset($map['.git/']);
+        return self::_sortDirectory($map);
     }
 
     private function _sortDirectory(array $directory)
