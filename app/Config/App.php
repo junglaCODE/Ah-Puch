@@ -471,6 +471,6 @@ class App extends BaseConfig
     */
         
     public $name = "Dimici";
-    public $version = "0.2.4";
+    public $version = "1.5.3";
 
 }
