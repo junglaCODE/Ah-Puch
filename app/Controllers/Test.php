@@ -63,7 +63,7 @@ class Test extends BaseController
                 echo 'failed';
         endif;
         $directory = self::mapDirectory($this->mainpath);
-        $this->Session->setFlashdata('balance',self::setCalcultationRules($directory));
+        $this->Session->set('balance', self::setCalcultationRules($directory));
         $params =[
                 'data' => self::setCalcultationRules($directory) ,
                 'sumt' => 0.0,
@@ -155,40 +155,46 @@ class Test extends BaseController
 
     public function export()
     {
-        $balance = $this->Session->getFlashdata('balance');
-        $spreadsheet = new Spreadsheet();
-        $spreadsheet->getProperties()->setCreator("Atik junglaCODE")->setTitle('Excel de auditoria');
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'Periodo');
-        $sheet->setCellValue('B1', 'Version');
-        $sheet->setCellValue('C1', 'UUID');
-        $sheet->setCellValue('D1', 'Subtotal');
-        $sheet->setCellValue('E1', 'IVA');
-        $sheet->setCellValue('F1', 'Total');
-        $sheet->setCellValue('G1', 'Metodo de pago');
-        $sheet->setCellValue('H1', 'Forma de pago');
-        $sheet->setCellValue('I1', 'Fecha');
-        $pivote = 2;
-       foreach($balance as $key => $value):
-        foreach($value as $_key => $_value):
-            $sheet->setCellValueByColumnAndRow(1, $pivote, (string) $key); 
-            $sheet->setCellValueByColumnAndRow(2, $pivote, (string) $_value->version); 
-            $sheet->setCellValueByColumnAndRow(3, $pivote, (string) $_value->certificado); 
-            $sheet->setCellValueByColumnAndRow(4, $pivote, $_value->subtotal); 
-            $sheet->setCellValueByColumnAndRow(5, $pivote, $_value->impuesto); 
-            $sheet->setCellValueByColumnAndRow(6, $pivote, $_value->total); 
-            $sheet->setCellValueByColumnAndRow(7, $pivote, (string) $_value->metodo); 
-            $sheet->setCellValueByColumnAndRow(8, $pivote, (string) $_value->forma); 
-            $sheet->setCellValueByColumnAndRow(9, $pivote, (string) $_value->fecha);
-            $pivote++;
-        endforeach;     
-            $pivote++;
-            $sheet->setCellValueByColumnAndRow(1, $pivote, "Totales");
-        endforeach;
-        $writer = new Xlsx($spreadsheet);
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="auditoria.xlsx"');
-        $writer->save('php://output');
+        try {
+            $balance = $this->Session->get('balance');
+            $spreadsheet = new Spreadsheet();
+            $spreadsheet->getProperties()->setCreator("Atik junglaCODE")->setTitle('Excel de auditoria');
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setCellValue('A1', 'Periodo');
+            $sheet->setCellValue('B1', 'Version');
+            $sheet->setCellValue('C1', 'UUID');
+            $sheet->setCellValue('D1', 'Subtotal');
+            $sheet->setCellValue('E1', 'IVA');
+            $sheet->setCellValue('F1', 'Total');
+            $sheet->setCellValue('G1', 'Metodo de pago');
+            $sheet->setCellValue('H1', 'Forma de pago');
+            $sheet->setCellValue('I1', 'Fecha');
+            $pivote = 2;
+           foreach($balance as $key => $value):
+            foreach($value as $_key => $_value):
+                $sheet->setCellValueByColumnAndRow(1, $pivote, (string) $key); 
+                $sheet->setCellValueByColumnAndRow(2, $pivote, (string) $_value->version); 
+                $sheet->setCellValueByColumnAndRow(3, $pivote, (string) $_value->certificado); 
+                $sheet->setCellValueByColumnAndRow(4, $pivote, $_value->subtotal); 
+                $sheet->setCellValueByColumnAndRow(5, $pivote, $_value->impuesto); 
+                $sheet->setCellValueByColumnAndRow(6, $pivote, $_value->total); 
+                $sheet->setCellValueByColumnAndRow(7, $pivote, (string) $_value->metodo); 
+                $sheet->setCellValueByColumnAndRow(8, $pivote, (string) $_value->forma); 
+                $sheet->setCellValueByColumnAndRow(9, $pivote, (string) $_value->fecha);
+                $pivote++;
+            endforeach;     
+                $pivote++;
+                $sheet->setCellValueByColumnAndRow(1, $pivote, "Totales");
+            endforeach;
+            $writer = new Xlsx($spreadsheet);
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment; filename="auditoria.xlsx"');
+            $writer->save('php://output');
+        } catch (\Throwable $th) {
+            //throw $th;
+            exit('No hay contenido para generar el excel');
+        }
+       
     }
 
 }

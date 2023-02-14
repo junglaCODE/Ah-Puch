@@ -2,9 +2,10 @@
 <?= $this->section('organism') ?>
 <div class="row" style="text-align: center;">
     <h3>Prototipo del Auditor de CFDI'S</h3>
-    <p>Por el momento el algoritmo solo acepta directorios de profundidad 2 como el que se ve en la imagen
-    Debe Comprimir el archivo desde windows. Por el momento la MACOSX no lo soporta por que crae bastante archivos temporales</p>
-    <div class="row">
+    <p>
+        Por el momento el algoritmo solo acepta directorios de profundidad 2 como el que se ve en la imagen.
+        El archivo comprimido debe tener solo una carpeta y debe ser con extension .ZIP
+    </p>
       <div class="col s6">    
         <img class="responsive-img center-align" src="<?= $imgtip?>" alt="depth2">
         </div>
