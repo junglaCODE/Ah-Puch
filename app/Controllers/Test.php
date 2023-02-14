@@ -168,13 +168,23 @@ class Test extends BaseController
         $sheet->setCellValue('G1', 'Metodo de pago');
         $sheet->setCellValue('H1', 'Forma de pago');
         $sheet->setCellValue('I1', 'Fecha');
-       /* foreach($balance as $key => $value):
-            $i = 0;
-            foreach($value as $_key => $_value):
-                $sheet->setCellValueByColumnAndRow(2, $i, 'asdad');
-            endforeach;
-            $i++;
-        endforeach;*/
+        $pivote = 2;
+       foreach($balance as $key => $value):
+        foreach($value as $_key => $_value):
+            $sheet->setCellValueByColumnAndRow(1, $pivote, (string) $key); 
+            $sheet->setCellValueByColumnAndRow(2, $pivote, (string) $_value->version); 
+            $sheet->setCellValueByColumnAndRow(3, $pivote, (string) $_value->certificado); 
+            $sheet->setCellValueByColumnAndRow(4, $pivote, $_value->subtotal); 
+            $sheet->setCellValueByColumnAndRow(5, $pivote, $_value->impuesto); 
+            $sheet->setCellValueByColumnAndRow(6, $pivote, $_value->total); 
+            $sheet->setCellValueByColumnAndRow(7, $pivote, (string) $_value->metodo); 
+            $sheet->setCellValueByColumnAndRow(8, $pivote, (string) $_value->forma); 
+            $sheet->setCellValueByColumnAndRow(9, $pivote, (string) $_value->fecha);
+            $pivote++;
+        endforeach;     
+            $pivote++;
+            $sheet->setCellValueByColumnAndRow(1, $pivote, "Totales");
+        endforeach;
         $writer = new Xlsx($spreadsheet);
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename="auditoria.xlsx"');
